@@ -5,16 +5,16 @@ Basic NestJS starter wired with Fastify and Mercurius for GraphQL.
 ## Getting started
 
 ```bash
-npm install
-npm run start:dev
+pnpm install
+pnpm start:dev
 ```
 
 ## Available scripts
 
 ```bash
-npm run build
-npm run start
-npm run start:dev
+pnpm build
+pnpm start
+pnpm start:dev
 ```
 
 ## GraphQL
