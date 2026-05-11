@@ -1,0 +1,44 @@
+{
+  "name": "bookstoregraph",
+  "version": "1.0.0",
+  "description": "Basic NestJS + Fastify + Mercurius GraphQL starter for bookStoreGraph.",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "start:dev": "ts-node --project tsconfig.json src/main.ts",
+    "start:prod": "node dist/main.js",
+    "test": "echo \"No test infrastructure is configured yet.\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olegustimchik/bookStoreGraph.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/olegustimchik/bookStoreGraph/issues"
+  },
+  "homepage": "https://github.com/olegustimchik/bookStoreGraph#readme",
+  "dependencies": {
+    "@nestjs/common": "^11.1.19",
+    "@nestjs/config": "^4.0.4",
+    "@nestjs/core": "^11.1.19",
+    "@nestjs/graphql": "^13.4.0",
+    "@nestjs/mercurius": "^13.4.0",
+    "@nestjs/platform-fastify": "^11.1.19",
+    "fastify": "^5.8.5",
+    "graphql": "^16.14.0",
+    "mercurius": "^16.9.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
