@@ -10,6 +10,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
+    "types": ["node", "jest"],
     "incremental": true,
     "strict": true,
     "ignoreDeprecations": "6.0",

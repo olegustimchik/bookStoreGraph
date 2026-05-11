@@ -6,10 +6,13 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "nest build",
-    "start": "node dist/main.js",
-    "start:dev": "ts-node --project tsconfig.json src/main.ts",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
-    "test": "echo \"No test infrastructure is configured yet.\""
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -38,9 +41,29 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.21",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.7.0",
+    "jest": "^30.4.2",
     "ts-node": "^10.9.2",
+    "ts-jest": "^29.4.9",
     "typescript": "^6.0.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   },
   "packageManager": "pnpm@10.21.0"
 }

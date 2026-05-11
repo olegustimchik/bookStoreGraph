@@ -13,8 +13,10 @@ pnpm start:dev
 
 ```bash
 pnpm build
-pnpm start
 pnpm start:dev
+pnpm start:debug
+pnpm start
+pnpm test
 ```
 
 ## GraphQL
