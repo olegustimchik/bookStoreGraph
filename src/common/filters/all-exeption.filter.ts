@@ -103,9 +103,6 @@ export class AllExceptionFilter implements ExceptionFilter {
         return res.send(response) as any;
       }
       case 'graphql':
-        if (response && (response as any).message) {
-           return throwError(() => new Error((response).message));
-        }
         return throwError(() => response);
       case 'rpc':
       case 'ws':

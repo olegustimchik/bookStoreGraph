@@ -23,8 +23,8 @@ const createValidationPipe = (): ValidationPipe => {
 const setupCors = (app: NestFastifyApplication): void => {
   const configService = app.get(ConfigService);
 
-  const origins = configService.get('ORIGINS');
-  const methods = configService.get('METHODS');
+  const origins = configService.get<string>('ORIGINS');
+  const methods = configService.get<string>('METHODS');
 
   app.enableCors({ origin: origins, methods });
 };

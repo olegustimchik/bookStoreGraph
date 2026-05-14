@@ -1,5 +1,5 @@
 import { ArgsType, Field } from "@nestjs/graphql";
-import { IsDate, IsOptional, IsString, IsUUID } from "class-validator";
+import { IsDate, IsOptional, IsString } from "class-validator";
 import { PaginationArgs } from "../../../../common/base/dto/pagination-args.dto";
 
 @ArgsType()
@@ -11,8 +11,8 @@ export class GetBooksArgs extends PaginationArgs {
 
     @Field(() => String, { nullable: true, description: 'Filter books by genre ID' })
     @IsOptional()
-    @IsUUID('4')
-    genreId?: string;
+    @IsString()
+    genre?: string;
 
     @Field(() => Date, { nullable: true, description: 'Filter books published from this date' })
     @IsOptional()

@@ -17,7 +17,7 @@ describe('BookResolver', () => {
     id: 'b1',
     title: 'Test Book',
     publicationDate: new Date(),
-    author: { id: 'a1' } as unknown as any,
+    author: { id: 'a1', deletedAt: undefined, fullName: 'Test Author', dateOfBirth: new Date(), books: [], createdAt: new Date(), updatedAt: new Date() },
     genres: [],
     createdAt: new Date(),
     updatedAt: new Date(),

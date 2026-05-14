@@ -6,12 +6,14 @@ import { UpdateGenreInput } from './dto/request/update-genre.dto';
 import { PaginateGenresResponse } from './dto/response/paginate-genres.response.dto';
 import { Genre } from './entities/genre.entity';
 import { GenreRepository } from './genre.repository';
+import { CacheService } from '../cache/cache.service';
 import { BaseService } from '../../common/base/base.service';
 
 @Injectable()
 export class GenreService extends BaseService<Genre> {
   constructor(
     private readonly genreRepository: GenreRepository,
+    private readonly cacheService: CacheService,
   ) {
     super(genreRepository);
   }
@@ -21,24 +23,37 @@ export class GenreService extends BaseService<Genre> {
   }
 
   async findGenres(getGenresArgs: GetGenresArgs): Promise<PaginateGenresResponse> {
+    const cacheKey = this.cacheService.generateHashKey('genres', getGenresArgs);
+    const cached = await this.cacheService.get<PaginateGenresResponse>(cacheKey);
+    if (cached) return cached;
+
     const where = getGenresArgs.query 
       ? { name: ILike(`%${getGenresArgs.query.trim().replace(/\s+/g, '%')}%`) } 
       : {};
     
     const [genres, totalCount] = await this.genreRepository.findAndCount({ where, skip: getGenresArgs.offset, take: getGenresArgs.limit });
     
-    return {
+    const result = {
       data: genres,
       totalCount,
       hasNextPage: getGenresArgs.offset + getGenresArgs.limit < totalCount,
     };
+
+    await this.cacheService.set(cacheKey, result);
+    return result;
   }
 
   async findGenre(id: string): Promise<Genre> {
+    const cacheKey = this.cacheService.generateHashKey('genre', { id });
+    const cached = await this.cacheService.get<Genre>(cacheKey);
+    if (cached) return cached;
+
     const genre = await this.genreRepository.findOneOrFail({ where: { id } });
     if (!genre) {
       throw new BadRequestException(`Genre with ID ${id} not found`);
     }
+
+    await this.cacheService.set(cacheKey, genre);
     return genre;
   }
 

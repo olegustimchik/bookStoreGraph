@@ -12,7 +12,7 @@ This project utilizes **NestJS**, **GraphQL (Mercurius + Fastify)**, and **Postg
 
 ---
 
-## 🛠️ Project Setup
+## Project Setup
 
 ### Prerequisites
 - Node.js (>= 18)
@@ -83,7 +83,7 @@ _Note: Because `DATABASE_MIGRATIONS_RUN=true` is used in the `.env` template, mi
 
 ---
 
-## 🚀 Running the Application
+## Running the Application
 
 ```bash
 # Standard Launch
@@ -102,7 +102,7 @@ You can now interact with the instance on:
 
 ---
 
-## 🔎 Example GraphQL Queries
+### Example GraphQL Queries
 
 ### Complex Books Query & Search
 This API exposes flexible searching techniques for Books using the `books` query to return paginated findings supporting case-insensitive searching, relationship extraction, alongside robust date and genre filters.
@@ -153,14 +153,22 @@ query SearchAuthors {
 
 ---
 
-## 🔒 Rate Limiting
+## Rate Limiting
 Rate-limiting guards block excessively repeated querying hitting the underlying Postgres servers. 
 It uses `@nestjs/throttler` via the local implementation mapping natively to the `FastifyRequest`.
-Values inside `.env` define limits (ex: max `10` requests per `1000`ms timeframe window).
+Values inside `.env` define limits.
 
 ---
 
-## 🧪 Testing Coverage
+## Caching (Redis)
+To optimize performance and minimize database load, the API integrates query-level caching using Redis.
+- Complex resolving operations (Books, Authors, Genres) are intercepted and managed by a custom `CacheService`.
+- A SHA-256 hash is generated dynamically from the paginated arguments to guarantee unique and scalable key lookups.
+- Deserialization automatically parses ISO timestamp strings back into native `Date` payloads to cleanly respect the internal GraphQL layer processing.
+
+---
+
+## Testing Coverage
 
 The solution utilizes Jest for testing Services, Repository mocking configurations, and application Resolvers ensuring full code validation paths passing successfully.
 
@@ -176,5 +184,8 @@ pnpm run test --coverage
 
 ## Authors & Resources
 
+Template: **[link](https://github.com/dmytroPolhul/nestjs-boilerplate)**
+
 Originating repository layout referenced/available over at:
-👉 **[bookStoreGraph GitHub Link](https://github.com/olegustimchik/bookStoreGraph)**
+ **[bookStoreGraph GitHub Link](https://github.com/olegustimchik/bookStoreGraph)**
+

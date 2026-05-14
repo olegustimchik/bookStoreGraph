@@ -9,7 +9,6 @@ export class WinstonLogger extends ConsoleLogger {
   constructor() {
     super();
     const logDir = path.join(process.cwd(), process.env.LOG_DIR || 'logs');
-    console.log(`Log directory: ${logDir}`);
 
     this.logger = winston.createLogger({
       format: winston.format.combine(

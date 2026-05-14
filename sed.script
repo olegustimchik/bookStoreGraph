@@ -1,6 +1,0 @@
-/async findAllGenres/c\
-    async findAllGenres(@Args() getGenresArgs: GetGenresArgs): Promise<Genre[]> {\
-        const result = await this.genreService.findGenres(getGenresArgs);\
-        console.log("RESOLVER RESULT:", result, Array.isArray(result));\
-        return result;\
-    }

@@ -118,7 +118,7 @@ type Query {
     from: DateTime
 
     """Filter books by genre ID"""
-    genreId: String
+    genre: String
     limit: Int! = 10
     offset: Int! = 0
 

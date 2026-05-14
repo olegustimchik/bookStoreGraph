@@ -9,6 +9,7 @@ import { ConfigurationModule } from './configuration/config.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthorModule } from './modules/author/author.module';
 import { BookModule } from './modules/book/book.module';
+import { AppCacheModule } from './modules/cache/cache.module';
 import { GenreModule } from './modules/genre/genre.module';
 import { RateLimiterModule } from './modules/rate-limiting/rate-limiter.module';
 
@@ -16,6 +17,7 @@ import { RateLimiterModule } from './modules/rate-limiting/rate-limiter.module';
   imports: [
     ConfigurationModule,
     DatabaseModule,
+    AppCacheModule,
     GraphQLModule.forRootAsync<MercuriusDriverConfig>({
       driver: MercuriusDriver,
       inject: [ConfigService],

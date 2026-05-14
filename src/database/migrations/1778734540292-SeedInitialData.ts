@@ -13,7 +13,7 @@ export class SeedInitialData1778734540292 implements MigrationInterface {
                 `INSERT INTO "genres" ("name") VALUES ($1) ON CONFLICT("name") DO NOTHING`,
                 [genreName]
             );
-            const res = await queryRunner.query(`SELECT "id" FROM "genres" WHERE "name" = $1`, [genreName]);
+            const res: Array<{ id: string }> = await queryRunner.query(`SELECT "id" FROM "genres" WHERE "name" = $1`, [genreName]);
             genreIds.push(res[0].id);
         }
 
@@ -32,7 +32,7 @@ export class SeedInitialData1778734540292 implements MigrationInterface {
             const end = new Date(2000, 0, 1).getTime();
             const dob = new Date(start + Math.random() * (end - start));
             
-            const result = await queryRunner.query(
+            const result: Array<{ id: string }> = await queryRunner.query(
                 `INSERT INTO "authors" ("full_name", "date_of_birth") VALUES ($1, $2) RETURNING "id"`,
                 [fullName, dob.toISOString()]
             );
