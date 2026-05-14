@@ -1,0 +1,32 @@
+# version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: book-store-pg
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    networks:
+      - book-store-network
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    restart: unless-stopped
+  redis:
+    image: redis:latest
+    container_name: book-store-redis
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    volumes:
+      - redis-data:/data
+
+volumes:
+  pg-data:
+  redis-data:
+
+networks:
+  book-store-network:
+    driver: bridge

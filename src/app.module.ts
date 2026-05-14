@@ -1,26 +1,37 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MercuriusDriver, MercuriusDriverConfig } from '@nestjs/mercurius';
-
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { AppResolver } from './app.resolver';
+import { WinstonLogger } from './common/logger/logger';
+import { ConfigurationModule } from './configuration/config.module';
+import { DatabaseModule } from './database/database.module';
+import { AuthorModule } from './modules/author/author.module';
+import { BookModule } from './modules/book/book.module';
+import { GenreModule } from './modules/genre/genre.module';
+import { RateLimiterModule } from './modules/rate-limiting/rate-limiter.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigurationModule,
+    DatabaseModule,
     GraphQLModule.forRootAsync<MercuriusDriverConfig>({
       driver: MercuriusDriver,
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        autoSchemaFile: true,
+      useFactory: () => ({
+        autoSchemaFile: 'schema.gql',
         graphiql: true,
-        path: configService.get<string>('GRAPHQL_PATH') ?? '/graphql',
+        playground: true,
         sortSchema: true,
+        context: (request: FastifyRequest, reply: FastifyReply) => ({ req: request, res: reply }),
       }),
     }),
+    BookModule,
+    AuthorModule,
+    GenreModule,
+    RateLimiterModule
   ],
-  providers: [AppResolver],
+  providers: [AppResolver, WinstonLogger],
 })
 export class AppModule {}

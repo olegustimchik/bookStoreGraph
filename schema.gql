@@ -1,0 +1,164 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Author {
+  books: [Book]
+  createdAt: DateTime!
+  dateOfBirth: DateTime!
+  dateOfDeath: DateTime
+  deletedAt: DateTime
+  fullName: String!
+  id: String!
+  updatedAt: DateTime!
+}
+
+type Book {
+  author: Author!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  genres: [Genre]!
+  id: String!
+  publicationDate: DateTime!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input CreateAuthorInput {
+  """Date of birth of the author"""
+  dateOfBirth: DateTime!
+
+  """Date of death of the author"""
+  dateOfDeath: DateTime
+
+  """Full name of the author"""
+  fullName: String!
+}
+
+input CreateBookInput {
+  """Author ID"""
+  authorId: String!
+
+  """List of Genre IDs"""
+  genreIds: [String!]
+
+  """Publication date of the book"""
+  publicationDate: DateTime!
+
+  """Title of the book"""
+  title: String!
+}
+
+input CreateGenreInput {
+  """Name of the genre"""
+  name: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Genre {
+  books: [Book]
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: String!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  createAuthor(createAuthorInput: CreateAuthorInput!): Author!
+  createBook(createBookInput: CreateBookInput!): Book!
+  createGenre(createGenreInput: CreateGenreInput!): Genre!
+  removeAuthor(id: String!): Author!
+  removeBook(id: String!): Book!
+  removeGenre(id: String!): Genre!
+  updateAuthor(updateAuthorInput: UpdateAuthorInput!): Author!
+  updateBook(updateBookInput: UpdateBookInput!): Book!
+  updateGenre(updateGenreInput: UpdateGenreInput!): Genre!
+}
+
+type PaginateAuthorsResponse {
+  data: [Author!]
+  hasNextPage: Boolean!
+  totalCount: Int!
+}
+
+type PaginateBooksResponse {
+  data: [Book!]
+  hasNextPage: Boolean!
+  totalCount: Int!
+}
+
+type PaginateGenresResponse {
+  data: [Genre!]
+  hasNextPage: Boolean!
+  totalCount: Int!
+}
+
+type Query {
+  author(id: String!): Author!
+  authors(
+    """Filter authors born from this date"""
+    from: DateTime
+    limit: Int! = 10
+    offset: Int! = 0
+
+    """A string to search author by full name"""
+    query: String
+
+    """Filter authors born up to this date"""
+    to: DateTime
+  ): PaginateAuthorsResponse!
+  book(id: String!): Book!
+  books(
+    """Filter books published from this date"""
+    from: DateTime
+
+    """Filter books by genre ID"""
+    genreId: String
+    limit: Int! = 10
+    offset: Int! = 0
+
+    """A string to search book by title"""
+    query: String
+
+    """Filter books published up to this date"""
+    to: DateTime
+  ): PaginateBooksResponse!
+  genre(id: String!): Genre!
+  genres(
+    limit: Int! = 10
+    offset: Int! = 0
+
+    """
+    A string to search across all entities (case-insensitive, partial match, covered few words cases)
+    """
+    query: String
+  ): PaginateGenresResponse!
+
+  """Simple GraphQL query to verify that the API is up."""
+  healthCheck: String!
+}
+
+input UpdateAuthorInput {
+  dateOfBirth: DateTime
+  dateOfDeath: DateTime
+  fullName: String
+  id: String!
+}
+
+input UpdateBookInput {
+  authorId: String
+  genreIds: [String!]
+  id: String!
+  publicationDate: DateTime
+  title: String
+}
+
+input UpdateGenreInput {
+  id: String!
+  name: String!
+}

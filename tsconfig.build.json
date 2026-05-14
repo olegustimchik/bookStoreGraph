@@ -4,5 +4,13 @@
     "**/*.spec.ts",
     "node_modules",
     "dist"
-  ]
+  ],
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "sourceMap": true,
+    "composite": true
+  }
 }
