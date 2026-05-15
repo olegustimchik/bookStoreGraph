@@ -2,9 +2,9 @@ import { Test } from '@nestjs/testing';
 import { AuthorResolver } from './author.resolver';
 import { AuthorService } from './author.service';
 import { GqlThrottlerGuard } from '../rate-limiting/gql-throttler.guard';
-import type { CreateAuthorInput } from './dto/request/create-author.dto';
-import type { GetAuthorsArgs } from './dto/request/get-authors.dto';
-import type { UpdateAuthorInput } from './dto/request/update-author.dto';
+import type { CreateAuthorInput } from './dto/request/create-author.request.dto';
+import type { GetAuthorsArgs } from './dto/request/get-authors.request.dto';
+import type { UpdateAuthorInput } from './dto/request/update-author.request.dto';
 import type { Author } from './entities/author.entity';
 import type { TestingModule } from '@nestjs/testing';
 

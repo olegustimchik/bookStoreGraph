@@ -1,4 +1,5 @@
 import { BadRequestException, Logger } from '@nestjs/common';
+import { prepareSearchTerm } from '../utils/prepare-term';
 import type {
   DeepPartial,
   FindManyOptions,
@@ -8,6 +9,7 @@ import type {
   QueryBuilder,
   QueryRunner,
   Repository,
+  SelectQueryBuilder,
 } from 'typeorm';
 
 export type TransactionOptions<T extends ObjectLiteral> = {
@@ -164,4 +166,34 @@ export abstract class BaseRepository<T extends ObjectLiteral> {
     const service = repository || this.repository;
     return service.manager.connection.createQueryRunner();
   }
+
+  createSelectQueryBuilder(alias: string, repository?: Repository<T>): SelectQueryBuilder<T> {
+    const service = repository || this.repository;
+    return service.createQueryBuilder(alias);
+  }
+
+  applyGlobalSearch(queryBuilder: SelectQueryBuilder<T>, searchTerm: string, columns: Array<string>): void {
+    const cleanQuery = searchTerm.trim();
+    if (!cleanQuery) return;
+
+    const tsQuery = this.prepareTsQuerySearchTerm(cleanQuery);
+
+    const vectorString = columns.join(" || ' ' || ");
+
+    const ginCondition = `to_tsvector('simple', ${vectorString}) @@ to_tsquery('simple', :tsQuery)`;
+    const rankSelect = `ts_rank(to_tsvector('simple', ${vectorString}), to_tsquery('simple', :tsQuery))`;
+
+    queryBuilder.andWhere(ginCondition, { tsQuery });
+      
+    queryBuilder.addSelect(rankSelect, 'relevance');
+    queryBuilder.orderBy('relevance', 'DESC');
+  }
+
+  execSelectQueryBuilder(qb: SelectQueryBuilder<T>): Promise<{ data: T[]; totalCount: number }> {
+    return qb.getManyAndCount().then(([data, totalCount]) => ({ data, totalCount }));
+  }
+
+  prepareTsQuerySearchTerm(term: string): string {
+    return prepareSearchTerm(term).split(' ').join(' | ');
+  } 
 }

@@ -2,9 +2,9 @@ import { Test } from '@nestjs/testing';
 import { GenreResolver } from './genre.resolver';
 import { GenreService } from './genre.service';
 import { GqlThrottlerGuard } from '../rate-limiting/gql-throttler.guard';
-import type { CreateGenreInput } from './dto/request/create-genre.dto';
-import type { GetGenresArgs } from './dto/request/get-genres.dto';
-import type { UpdateGenreInput } from './dto/request/update-genre.dto';
+import type { CreateGenreInput } from './dto/request/create-genre.request.dto';
+import type { GetGenresArgs } from './dto/request/get-genres.request.dto';
+import type { UpdateGenreInput } from './dto/request/update-genre.request.dto';
 import type { Genre } from './entities/genre.entity';
 import type { TestingModule } from '@nestjs/testing';
 

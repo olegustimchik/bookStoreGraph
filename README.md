@@ -104,30 +104,49 @@ You can now interact with the instance on:
 
 ### Example GraphQL Queries
 
-### Complex Books Query & Search
-This API exposes flexible searching techniques for Books using the `books` query to return paginated findings supporting case-insensitive searching, relationship extraction, alongside robust date and genre filters.
+### Global Search Query
+This API exposes flexible global searching techniques across multiple entities (Books, Authors, Genres) using the `search` query. It supports case-insensitive searching, partial matches, and robust filtering like genres and publication years.
 
 ```graphql
-query ComplexBookSearch {
-  books(
-    query: "Potter"
-    genreId: "d6f5f3g1-8d2a-12e3-..." # Add a real genre ID mapping
-    from: "1995-01-01T00:00:00.000Z"
-    to: "2015-01-01T00:00:00.000Z"
-    limit: 10
-    offset: 0
+query GlobalSearch {
+  search(
+    search: {
+      query: "Potter"
+      filter: {
+        genre: "Fantasy"
+        publicationYear: {
+          from: 1995
+          to: 2015
+        }
+      }
+    }
   ) {
-    totalCount
-    hasNextPage
-    data {
-      id
-      title
-      publicationDate
-      author {
+    books {
+      totalCount
+      data {
+        id
+        title
+        publicationDate
+        author {
+          id
+          fullName
+        }
+        genres {
+          id
+          name
+        }
+      }
+    }
+    authors {
+      totalCount
+      data {
         id
         fullName
       }
-      genres {
+    }
+    genres {
+      totalCount
+      data {
         id
         name
       }

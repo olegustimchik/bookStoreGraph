@@ -1,15 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { FindManyOptions, ILike, In } from 'typeorm';
+import { SelectQueryBuilder } from 'typeorm/browser';
 import { BookRepository } from './book.repository';
 import { AuthorRepository } from '../author/author.repository';
 import { CacheService } from '../cache/cache.service';
-import { CreateBookInput } from './dto/request/create-book.dto';
-import { GetBooksArgs } from './dto/request/get-books.dto';
-import { UpdateBookInput } from './dto/request/update-book.dto';
+import { CreateBookInput } from './dto/request/create-book.request.dto';
+import { GetBooksArgs } from './dto/request/get-books.request.dto';
+import { UpdateBookInput } from './dto/request/update-book.request.dto';
 import { PaginateBooksResponse } from './dto/response/paginate-books.response.dto';
 import { Book } from './entities/book.entity';
 import { BaseService } from '../../common/base/base.service';
 import { GenreRepository } from '../genre/genre.repository';
+import { FilterInput } from '../search/dto/request/filter-input.request.dto';
 
 
 @Injectable()
@@ -108,5 +110,33 @@ export class BookService extends BaseService<Book> {
     const book = await this.findBook(id);
     await this.bookRepository.delete({ id });
     return book;
+  }
+
+  async applySearch(searchTerm: string | undefined, filterArgs: FilterInput | undefined): Promise<{ data: Book[]; totalCount: number }> {
+    const booksSelectQueryBuilder = this.bookRepository.createSelectQueryBuilder('book');
+    this.bookRepository.applyGlobalSearch(booksSelectQueryBuilder, searchTerm ?? '', ['book.title']);
+    if (filterArgs) {
+      this.applyFilter(filterArgs, booksSelectQueryBuilder);
+    }
+
+    booksSelectQueryBuilder.orderBy('book.title', 'ASC');
+    return await this.bookRepository.execSelectQueryBuilder(booksSelectQueryBuilder);
+  }
+
+  applyFilter(filterArgs: FilterInput, queryBuilder: SelectQueryBuilder<Book>): void {
+      if (filterArgs.genre) {
+        queryBuilder.innerJoin('book.genres', 'genres');
+        queryBuilder.andWhere('genres.name ILIKE :genre', { genre: `%${filterArgs.genre.trim().replace(/\s+/g, '%')}%` });
+      }
+      if (filterArgs.publicationYear) {
+        const { from, to } = filterArgs.publicationYear;
+        if (from && to) {
+          queryBuilder.andWhere('EXTRACT(YEAR FROM book.publication_date) BETWEEN :from AND :to', { from, to });
+        } else if (from) {
+          queryBuilder.andWhere('EXTRACT(YEAR FROM book.publication_date) >= :from', { from });
+        } else if (to) {
+          queryBuilder.andWhere('EXTRACT(YEAR FROM book.publication_date) <= :to', { to });
+        }
+      } 
   }
 }

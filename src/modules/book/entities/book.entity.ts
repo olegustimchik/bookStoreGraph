@@ -21,6 +21,6 @@ export class Book extends BaseEntity {
 
   @ManyToMany(() => Genre, (genre) => genre.books)
   @JoinTable()
-  @Field(() => [Genre], { nullable: 'items' })
+  @Field(() => [Genre], { nullable: true })
   genres!: Relation<Genre[]>;
 }

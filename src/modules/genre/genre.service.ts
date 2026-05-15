@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ILike } from 'typeorm';
-import { CreateGenreInput } from './dto/request/create-genre.dto';
-import { GetGenresArgs } from './dto/request/get-genres.dto';
-import { UpdateGenreInput } from './dto/request/update-genre.dto';
+import { CreateGenreInput } from './dto/request/create-genre.request.dto';
+import { GetGenresArgs } from './dto/request/get-genres.request.dto';
+import { UpdateGenreInput } from './dto/request/update-genre.request.dto';
 import { PaginateGenresResponse } from './dto/response/paginate-genres.response.dto';
 import { Genre } from './entities/genre.entity';
 import { GenreRepository } from './genre.repository';
-import { CacheService } from '../cache/cache.service';
 import { BaseService } from '../../common/base/base.service';
+import { CacheService } from '../cache/cache.service';
 
 @Injectable()
 export class GenreService extends BaseService<Genre> {
@@ -71,5 +71,12 @@ export class GenreService extends BaseService<Genre> {
   async remove(id: string): Promise<Genre> {
     const genre = await this.genreRepository.delete({ id });
     return genre;
+  }
+
+  async applySearch(searchTerm: string | undefined): Promise<{ data: Genre[]; totalCount: number }> {
+    const genresSelectQueryBuilder = this.genreRepository.createSelectQueryBuilder('genre');
+    this.genreRepository.applyGlobalSearch(genresSelectQueryBuilder, searchTerm ?? '', ['genre.name']);
+    genresSelectQueryBuilder.orderBy('genre.name', 'ASC');
+    return await this.genreRepository.execSelectQueryBuilder(genresSelectQueryBuilder);
   }
 }

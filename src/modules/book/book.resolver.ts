@@ -2,9 +2,9 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { BookService } from './book.service';
 import { GqlThrottlerGuard } from '../rate-limiting/gql-throttler.guard';
-import { CreateBookInput } from './dto/request/create-book.dto';
-import { GetBooksArgs } from './dto/request/get-books.dto';
-import { UpdateBookInput } from './dto/request/update-book.dto';
+import { CreateBookInput } from './dto/request/create-book.request.dto';
+import { GetBooksArgs } from './dto/request/get-books.request.dto';
+import { UpdateBookInput } from './dto/request/update-book.request.dto';
 import { PaginateBooksResponse } from './dto/response/paginate-books.response.dto';
 import { Book } from './entities/book.entity';
 

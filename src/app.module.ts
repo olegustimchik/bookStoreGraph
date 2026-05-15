@@ -12,12 +12,14 @@ import { BookModule } from './modules/book/book.module';
 import { AppCacheModule } from './modules/cache/cache.module';
 import { GenreModule } from './modules/genre/genre.module';
 import { RateLimiterModule } from './modules/rate-limiting/rate-limiter.module';
+import { SearchModule } from './modules/search/search.module';
 
 @Module({
   imports: [
     ConfigurationModule,
     DatabaseModule,
     AppCacheModule,
+    SearchModule,
     GraphQLModule.forRootAsync<MercuriusDriverConfig>({
       driver: MercuriusDriver,
       inject: [ConfigService],

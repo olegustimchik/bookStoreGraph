@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Author {
-  books: [Book]
+  books: [Book!]
   createdAt: DateTime!
   dateOfBirth: DateTime!
   dateOfDeath: DateTime
@@ -17,11 +17,26 @@ type Book {
   author: Author!
   createdAt: DateTime!
   deletedAt: DateTime
-  genres: [Genre]!
+  genres: [Genre!]
   id: String!
   publicationDate: DateTime!
   title: String!
   updatedAt: DateTime!
+}
+
+type CountedAuthorResponse {
+  data: [Author!]
+  totalCount: Int!
+}
+
+type CountedBookResponse {
+  data: [Book!]
+  totalCount: Int!
+}
+
+type CountedGenreResponse {
+  data: [Genre!]
+  totalCount: Int!
 }
 
 input CreateAuthorInput {
@@ -59,8 +74,16 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input FilterInput {
+  """A string to filter by genres"""
+  genre: String
+
+  """A time range to filter by publication year"""
+  publicationYear: TimeInput
+}
+
 type Genre {
-  books: [Book]
+  books: [Book!]
   createdAt: DateTime!
   deletedAt: DateTime
   id: String!
@@ -133,14 +156,37 @@ type Query {
     limit: Int! = 10
     offset: Int! = 0
 
-    """
-    A string to search across all entities (case-insensitive, partial match, covered few words cases)
-    """
+    """A string to search genres by name"""
     query: String
   ): PaginateGenresResponse!
 
   """Simple GraphQL query to verify that the API is up."""
   healthCheck: String!
+  search(search: SearchArgs!): SearchResponse!
+}
+
+input SearchArgs {
+  """Filtering options for the search"""
+  filter: FilterInput
+
+  """
+  A string to search across all entities (case-insensitive, partial match, covered few words cases)
+  """
+  query: String
+}
+
+type SearchResponse {
+  authors: CountedAuthorResponse
+  books: CountedBookResponse
+  genres: CountedGenreResponse
+}
+
+input TimeInput {
+  """A number to filter by publication year"""
+  from: Int
+
+  """A number to filter by publication year"""
+  to: Int
 }
 
 input UpdateAuthorInput {

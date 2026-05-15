@@ -1,13 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ILike, Between, LessThanOrEqual, MoreThanOrEqual, FindOptionsWhere } from 'typeorm';
+import { SelectQueryBuilder } from 'typeorm/browser';
 import { AuthorRepository } from './author.repository';
 import { CacheService } from '../cache/cache.service';
-import { CreateAuthorInput } from './dto/request/create-author.dto';
-import { GetAuthorsArgs } from './dto/request/get-authors.dto';
-import { UpdateAuthorInput } from './dto/request/update-author.dto';
+import { CreateAuthorInput } from './dto/request/create-author.request.dto';
+import { GetAuthorsArgs } from './dto/request/get-authors.request.dto';
+import { UpdateAuthorInput } from './dto/request/update-author.request.dto';
 import { PaginateAuthorsResponse } from './dto/response/paginate-authors.response.dto';
 import { Author } from './entities/author.entity';
 import { BaseService } from '../../common/base/base.service';
+import { FilterInput } from '../search/dto/request/filter-input.request.dto';
 
 @Injectable()
 export class AuthorService extends BaseService<Author> {
@@ -65,8 +67,7 @@ export class AuthorService extends BaseService<Author> {
     await this.cacheService.set(cacheKey, author);
     return author;
   }
-    return author;
-  }
+
 
   async updateAuthor(updateAuthorInput: UpdateAuthorInput): Promise<Author> {
     const author = await this.findAuthor(updateAuthorInput.id);
@@ -81,5 +82,29 @@ export class AuthorService extends BaseService<Author> {
   async remove(id: string): Promise<Author> {
     const author = await this.authorRepository.delete({ id });
     return author;
+  }
+
+  async applySearch(searchTerm: string | undefined, filter: FilterInput | undefined): Promise<{ data: Author[]; totalCount: number }> {
+    const authorsSelectQueryBuilder = this.authorRepository.createSelectQueryBuilder('author');
+    this.authorRepository.applyGlobalSearch(authorsSelectQueryBuilder, searchTerm ?? '', ['author.full_name']);
+
+    if (filter) {
+      this.applyFilter(filter, authorsSelectQueryBuilder);
+    }
+    authorsSelectQueryBuilder.orderBy('author.full_name', 'ASC');
+    return await this.authorRepository.execSelectQueryBuilder(authorsSelectQueryBuilder);
+  } 
+
+  applyFilter(filterArgs: FilterInput, queryBuilder: SelectQueryBuilder<Author>): void {
+    if (filterArgs.publicationYear) {
+      const { from, to } = filterArgs.publicationYear;
+      if (from && to) {
+        queryBuilder.andWhere('(EXTRACT(YEAR FROM author.date_of_birth) <= :to AND (EXTRACT(YEAR FROM author.date_of_death) >= :from OR author.date_of_death IS NULL))', { from, to });
+      } else if (from) {
+        queryBuilder.andWhere('(EXTRACT(YEAR FROM author.date_of_death) >= :from OR author.date_of_death IS NULL)', { from });
+      } else if (to) {
+        queryBuilder.andWhere('EXTRACT(YEAR FROM author.date_of_birth) <= :to', { to });
+      }
+    }
   }
 }

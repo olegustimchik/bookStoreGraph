@@ -1,12 +1,14 @@
 import { Test } from '@nestjs/testing';
 import { GenreRepository } from './genre.repository';
 import { GenreService } from './genre.service';
+import { CacheService } from '../cache/cache.service';
 import type { Genre } from './entities/genre.entity';
 import type { TestingModule } from '@nestjs/testing';
 
 describe('GenreService', () => {
   let service: GenreService;
   let repository: Record<string, jest.Mock>;
+  let cacheService: Record<string, jest.Mock>;
 
   const mockGenre = {
     id: '123e4567-e89b-12d3-a456-426614174000',
@@ -22,12 +24,23 @@ describe('GenreService', () => {
       delete: jest.fn(),
     };
 
+    const mockCacheService = {
+      generateHashKey: jest.fn().mockReturnValue('mocked-hash'),
+      get: jest.fn(),
+      set: jest.fn(),
+      del: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GenreService,
         {
           provide: GenreRepository,
           useValue: mockRepo,
+        },
+        {
+          provide: CacheService,
+          useValue: mockCacheService,
         },
       ],
     }).compile();

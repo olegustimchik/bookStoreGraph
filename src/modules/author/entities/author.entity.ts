@@ -19,6 +19,6 @@ export class Author extends BaseEntity {
   dateOfDeath?: Date;
 
   @OneToMany(() => Book, (book) => book.author)
-  @Field(() => [Book], { nullable: 'itemsAndList' })
+  @Field(() => [Book], { nullable: true })
   books!: Relation<Book[]>;
 }

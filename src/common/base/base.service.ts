@@ -49,4 +49,13 @@ export class BaseService<T extends ObjectLiteral> {
   async hardDelete(where: FindOptionsWhere<T>): Promise<number> {
     return this.repository.hardDelete(where);
   }
+
+  createSelectQueryBuilder(alias: string) {
+     return this.repository.createSelectQueryBuilder(alias);
+  }
+
+  protected prepareTsQuerySearchTerm(searchTerm: string): string {
+    const term = searchTerm.split(' ').join(' | ');
+    return `${term}:*`;
+  }
 }

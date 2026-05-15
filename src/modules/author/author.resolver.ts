@@ -2,9 +2,9 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthorService } from './author.service';
 import { GqlThrottlerGuard } from '../rate-limiting/gql-throttler.guard';
-import { CreateAuthorInput } from './dto/request/create-author.dto';
-import { GetAuthorsArgs } from './dto/request/get-authors.dto';
-import { UpdateAuthorInput } from './dto/request/update-author.dto';
+import { CreateAuthorInput } from './dto/request/create-author.request.dto';
+import { GetAuthorsArgs } from './dto/request/get-authors.request.dto';
+import { UpdateAuthorInput } from './dto/request/update-author.request.dto';
 import { PaginateAuthorsResponse } from './dto/response/paginate-authors.response.dto';
 import { Author } from './entities/author.entity';
 

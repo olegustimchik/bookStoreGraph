@@ -4,7 +4,7 @@ import { PaginationArgs } from "../../../../common/base/dto/pagination-args.dto"
 
 @ArgsType()
 export class GetGenresArgs extends PaginationArgs {
-    @Field(() => String, { nullable: true, description: 'A string to search across all entities (case-insensitive, partial match, covered few words cases)' })
+    @Field(() => String, { nullable: true, description: 'A string to search genres by name' })
     @IsOptional()
     @IsString()
     query?: string;

@@ -2,9 +2,9 @@ import { Test } from '@nestjs/testing';
 import { BookResolver } from './book.resolver';
 import { BookService } from './book.service';
 import { GqlThrottlerGuard } from '../rate-limiting/gql-throttler.guard';
-import type { CreateBookInput } from './dto/request/create-book.dto';
-import type { GetBooksArgs } from './dto/request/get-books.dto';
-import type { UpdateBookInput } from './dto/request/update-book.dto';
+import type { CreateBookInput } from './dto/request/create-book.request.dto';
+import type { GetBooksArgs } from './dto/request/get-books.request.dto';
+import type { UpdateBookInput } from './dto/request/update-book.request.dto';
 import type { Book } from './entities/book.entity';
 import type { TestingModule } from '@nestjs/testing';
 

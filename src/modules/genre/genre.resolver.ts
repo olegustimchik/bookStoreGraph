@@ -1,9 +1,9 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { GqlThrottlerGuard } from '../rate-limiting/gql-throttler.guard';
-import { CreateGenreInput } from './dto/request/create-genre.dto';
-import { GetGenresArgs } from './dto/request/get-genres.dto';
-import { UpdateGenreInput } from './dto/request/update-genre.dto';
+import { CreateGenreInput } from './dto/request/create-genre.request.dto';
+import { GetGenresArgs } from './dto/request/get-genres.request.dto';
+import { UpdateGenreInput } from './dto/request/update-genre.request.dto';
 import { PaginateGenresResponse } from './dto/response/paginate-genres.response.dto';
 import { Genre } from './entities/genre.entity';
 import { GenreService } from './genre.service';

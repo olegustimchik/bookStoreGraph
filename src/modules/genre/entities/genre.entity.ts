@@ -11,6 +11,6 @@ export class Genre extends BaseEntity {
   name!: string;
 
   @OneToMany(() => Book, (book) => book.genres)
-  @Field(() => [Book], { nullable: 'itemsAndList' })
+  @Field(() => [Book], { nullable: true})
   books!: Relation<Book[]>;
 }
